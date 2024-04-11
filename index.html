@@ -1,0 +1,50 @@
+<html>
+<head>
+
+</head>
+<body>
+
+
+<form id="payment-form">
+  <input type="text" id="card-number" placeholder="Card number" required>
+  <input type="text" id="expiry-date" placeholder="MM/YY" required>
+  <input type="text" id="cvc" placeholder="CVC" required>
+  <button type="submit">Submit Payment</button>
+</form>
+
+</body>
+
+
+<!-- Include Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+  var stripe = Stripe('pk_live_51NDDG0FfWBR5brrz5LMEMHWtHyedCb0lRRp9jVCDWRpHDu1L3rw6j0aI7SWrCZylAca4UNyf9PTmnNczt4xgkxx300QKdQ8EYx');
+
+  var form = document.getElementById('payment-form');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    stripe.createToken('card', {
+      card: {
+        number: document.getElementById('card-number').value,
+        exp_month: document.getElementById('expiry-date').value.split('/')[0],
+        exp_year: document.getElementById('expiry-date').value.split('/')[1],
+        cvc: document.getElementById('cvc').value
+      }
+    }).then(function(result) {
+      if (result.error) {
+        // Handle errors
+        console.error(result.error.message);
+      } else {
+        // Token created successfully
+        console.log(result.token);
+        // You can now send this token to your server to complete the payment
+      }
+    });
+  });
+
+
+</script>
+</html>
